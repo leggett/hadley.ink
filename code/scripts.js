@@ -78,46 +78,11 @@ const closeMobileNav = (e = false) => {
   setTimeout(cleanUrl, 50);
 };
 
-// EMAIL - SmtpJS.com - v3.0.0
-const Email = {
-  send: function (a) {
-    return new Promise(function (n, e) {
-      (a.nocache = Math.floor(1e6 * Math.random() + 1)), (a.Action = "Send");
-      let t = JSON.stringify(a);
-      Email.ajaxPost("https://smtpjs.com/v3/smtpjs.aspx?", t, function (e) {
-        n(e);
-      });
-    });
-  },
-  ajaxPost: function (e, n, t) {
-    let a = Email.createCORSRequest("POST", e);
-    a.setRequestHeader("Content-type", "application/x-www-form-urlencoded"),
-      (a.onload = function () {
-        let e = a.responseText;
-        null != t && t(e);
-      }),
-      a.send(n);
-  },
-  ajax: function (e, n) {
-    let t = Email.createCORSRequest("GET", e);
-    (t.onload = function () {
-      let e = t.responseText;
-      null != n && n(e);
-    }),
-      t.send();
-  },
-  createCORSRequest: function (e, n) {
-    let t = new XMLHttpRequest();
-    return (
-      "withCredentials" in t
-        ? t.open(e, n, !0)
-        : "undefined" != typeof XDomainRequest
-        ? (t = new XDomainRequest()).open(e, n)
-        : (t = null),
-      t
-    );
-  },
-};
+// EMAIL - EmailJS
+// EmailJS configuration
+const EMAILJS_SERVICE_ID = "service_htcm0yj";
+const EMAILJS_TEMPLATE_ID = "template_oh6m5db";
+const EMAILJS_PUBLIC_KEY = "787zGOoMh0pIAbSic";
 
 function sendEmail(senderName, senderEmail, messageBody) {
   const form = document.querySelector("form.contact");
@@ -128,21 +93,23 @@ function sendEmail(senderName, senderEmail, messageBody) {
     return;
   }
 
-  Email.send({
-    SecureToken: "bef19497-1bf0-4ddf-916d-89c7b576e916",
-    To: "hi@hadley.ink",
-    From: "hi@hadley.ink",
-    Subject: `Message from ${senderName}`,
-    Body: messageBody,
-  }).then((message) => {
-    if (message === "OK") {
+  // Prepare template parameters
+  const templateParams = {
+    name: senderName,
+    email: senderEmail,
+    message: messageBody,
+  };
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams).then(
+    (response) => {
       form.classList.remove("failed");
       form.classList.add("success");
-    } else {
+    },
+    (error) => {
       form.classList.add("failed");
-      console.error(message);
+      console.error("EmailJS error:", error);
     }
-  });
+  );
 }
 
 // INITIALIZE APP -- CALLED ON PAGE LOAD
@@ -151,6 +118,11 @@ const initialize = () => {
   window.setTimeout(() => {
     document.body.classList.remove("is-preload");
   }, 100);
+
+  // Initialize EmailJS if available
+  if (typeof emailjs !== "undefined") {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
 
   // Initialize elements
   nav = document.querySelector("#nav");
@@ -213,7 +185,6 @@ const initialize = () => {
   }
 
   // Initialize contact form
-
   sendButton.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -231,8 +202,7 @@ const initialize = () => {
       document.querySelector("form.contact").classList.remove("failed");
     }
 
-    let encodedMessage = encodeURIComponent(`\n\n--\n${senderName} ${senderEmail} wrote:\n${message}`);
-    let messageBody = `${senderName} (${senderEmail}) sent you a message via hadley.ink<br><br>${message}<br><br><a href="mailto:${senderEmail}?body=${encodedMessage}">Reply to ${senderName}</a>`;
+    let messageBody = `${message}\n\nFrom ${senderName} (${senderEmail})`;
     sendEmail(senderName, senderEmail, messageBody);
   });
 };

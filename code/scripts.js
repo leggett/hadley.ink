@@ -4,20 +4,36 @@ let nav, navLinks, navMobileButton, navMobileClose, navMain, wrapper, intro, hea
 const navItems =
   location.host === "hadley.ink"
     ? [
-        { name: "The Novel", link: "/", target: "" },
-        { name: "Events", link: "/events", target: "" },
-        { name: "About Hadley", link: "/about", target: "" },
-        // { name: "Other writing", link: "/writing", target: "" },
-        { name: "Contact", link: "/contact", target: "" },
-        { name: "Newsletter", link: "https://writingchat.substack.com", target: "_new" },
+        { name: "The Novel", link: "/", target: "", mobileOnly: false },
+        { name: "About Hadley", link: "/about", target: "", mobileOnly: false },
+        { name: "Events", link: "/events", target: "", mobileOnly: false },
+        // { name: "Other writing", link: "/writing", target: "", mobileOnly: false },
+        { name: "Contact", link: "/contact", target: "", mobileOnly: false },
+        { name: "Newsletter", link: "https://writingchat.substack.com", target: "_new", mobileOnly: false },
+        {
+          name: "Goodreads",
+          link: "https://www.goodreads.com/book/show/199541837-all-they-ask-is-everything",
+          target: "_new",
+          mobileOnly: true,
+        },
+        { name: "Instagram", link: "https://instagram.com/hadleyleggett", target: "_new", mobileOnly: true },
       ]
     : [
-        { name: "The Novel", link: "index.html", target: "" },
-        { name: "Events", link: "events.html", target: "" },
-        { name: "About Hadley", link: "about.html", target: "" },
+        // { name: "The Novel", link: "index.html", target: "", mobileOnly: false },
+        { name: "Not a Perfect Science", link: "index.html", target: "", mobileOnly: false },
+        { name: "All They Ask Is Everything", link: "all-they-ask-is-everything.html", target: "", mobileOnly: false },
+        { name: "About Hadley", link: "about.html", target: "", mobileOnly: false },
+        // { name: "Events", link: "events.html", target: "" },
         // { name: "Other writing", link: "writing.html", target: "" },
-        { name: "Contact", link: "contact.html", target: "" },
-        { name: "Newsletter", link: "https://writingchat.substack.com", target: "_new" },
+        { name: "Contact", link: "contact.html", target: "", mobileOnly: false },
+        { name: "Newsletter", link: "https://writingchat.substack.com", target: "_new", mobileOnly: false },
+        {
+          name: "Goodreads",
+          link: "https://www.goodreads.com/author/list/45261135.Hadley_Leggett",
+          target: "_new",
+          mobileOnly: true,
+        },
+        { name: "Instagram", link: "https://instagram.com/hadleyleggett", target: "_new", mobileOnly: true },
       ];
 
 // UTILITIES
@@ -108,7 +124,7 @@ function sendEmail(senderName, senderEmail, messageBody) {
     (error) => {
       form.classList.add("failed");
       console.error("EmailJS error:", error);
-    }
+    },
   );
 }
 
@@ -138,9 +154,9 @@ const initialize = () => {
   navItems.forEach((item) => {
     navLinks.appendChild(
       make(
-        `li${location.pathname === item.link ? ".active" : ""}`,
-        make("a", { href: item.link, target: item.target }, item.name)
-      )
+        `li${location.pathname === item.link ? ".active" : ""}${item.mobileOnly ? ".mobileOnly" : ""}`,
+        make("a", { href: item.link, target: item.target }, item.name),
+      ),
     );
   });
 
@@ -167,7 +183,7 @@ const initialize = () => {
         navMobileButton.classList.toggle("alt", !entry.isIntersecting);
       });
     },
-    { threshold: 0.1 }
+    { threshold: 0.1 },
   );
   mobileNavButtonObserver.observe(header);
 
@@ -179,7 +195,7 @@ const initialize = () => {
           intro.classList.toggle("hidden", !entry.isIntersecting);
         });
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
     introObserver.observe(intro);
   }

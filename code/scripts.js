@@ -4,9 +4,10 @@ let nav, navLinks, navMobileButton, navMobileClose, navMain, wrapper, intro, hea
 const navItems =
   location.host === "hadley.ink"
     ? [
-        { name: "The Novel", link: "/", target: "", mobileOnly: false },
+        { name: "Not a Perfect Science", link: "/", target: "", mobileOnly: false },
+        { name: "All They Ask Is Everything", link: "/all-they-ask-is-everything", target: "", mobileOnly: false },
         { name: "About Hadley", link: "/about", target: "", mobileOnly: false },
-        { name: "Events", link: "/events", target: "", mobileOnly: false },
+        // { name: "Events", link: "/events", target: "", mobileOnly: false },
         // { name: "Other writing", link: "/writing", target: "", mobileOnly: false },
         { name: "Contact", link: "/contact", target: "", mobileOnly: false },
         { name: "Newsletter", link: "https://writingchat.substack.com", target: "_new", mobileOnly: false },

@@ -28,6 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Automatically switch to the next quote every 3 seconds
-  interval = setInterval(nextQuote, 4000);
+  // Automatically switch to the next quote every 6 seconds
+  interval = setInterval(nextQuote, 6000);
 });
